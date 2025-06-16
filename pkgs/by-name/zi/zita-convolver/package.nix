@@ -32,8 +32,7 @@ stdenv.mkDerivation rec {
 
   meta = {
     description = "Convolution library by Fons Adriaensen";
-    version = version;
-    homepage = "http://kokkinizita.linuxaudio.org/linuxaudio/downloads/index.html";
+    homepage = "https://kokkinizita.linuxaudio.org/linuxaudio/index.html";
     license = lib.licenses.gpl3Plus;
     maintainers = [ lib.maintainers.magnetophon ];
     platforms = lib.platforms.linux;
