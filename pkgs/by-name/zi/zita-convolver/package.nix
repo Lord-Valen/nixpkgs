@@ -13,11 +13,12 @@ stdenv.mkDerivation rec {
     hash = "sha256-f8a3sLcN6GMPV/8E/faqMYkJdUa7WqmQBrehH6kCJtc=";
   };
 
+  sourceRoot = "${src.name}/source";
   buildInputs = [ fftwFloat ];
 
-  patchPhase = ''
-    cd source
-    sed -e "s@ldconfig@@" -i Makefile
+  postPatch = ''
+    substituteInPlace Makefile \
+      --replace-quiet "ldconfig" ""
   '';
 
   makeFlags = [
