@@ -13,6 +13,7 @@
   glib,
   glib-networking,
   glibmm,
+  gperf,
   adwaita-icon-theme,
   gsettings-desktop-schemas,
   gtk3,
@@ -21,6 +22,7 @@
   intltool,
   ladspaH,
   libjack2,
+  liblo,
   libsndfile,
   lilv,
   lrdf,
@@ -32,6 +34,7 @@
   sord,
   sratom,
   wafHook,
+  which,
   wrapGAppsHook3,
   zita-convolver,
   zita-resampler,
@@ -49,7 +52,7 @@ stdenv.mkDerivation (finalAttrs: {
   src = fetchFromGitHub {
     owner = "brummer10";
     repo = "guitarix";
-    rev = "V${finalAttrs.version}";
+    tag = "V${finalAttrs.version}";
     fetchSubmodules = true;
     hash = "sha256-YQqcpdehfC9UE1OowC1/YUw2eWgbLWMbAJ3V5tVmtiU=";
   };
@@ -58,14 +61,17 @@ stdenv.mkDerivation (finalAttrs: {
 
   nativeBuildInputs = [
     gettext
+    gperf
     hicolor-icon-theme
     intltool
     pkg-config
     python3
     wafHook
+    which
     wrapGAppsHook3
   ];
 
+  # TODO: Identify optional dependencies and add corresponding parameters.
   buildInputs = [
     avahi
     bluez
@@ -83,6 +89,7 @@ stdenv.mkDerivation (finalAttrs: {
     gtkmm3
     ladspaH
     libjack2
+    liblo
     libsndfile
     lilv
     lrdf
@@ -95,12 +102,19 @@ stdenv.mkDerivation (finalAttrs: {
     zita-resampler
   ];
 
+  # There are many bad shebangs which can fail builds.
+  # See `https://github.com/brummer10/guitarix/issues/246`.
+  postPatch = ''
+    patchShebangs --build tools/**
+  '';
+
   wafConfigureFlags = [
     "--no-font-cache-update"
     "--shared-lib"
     "--no-desktop-update"
     "--enable-nls"
     "--install-roboto-font"
+    "--faust"
   ]
   ++ optional optimizationSupport "--optimization";
 
