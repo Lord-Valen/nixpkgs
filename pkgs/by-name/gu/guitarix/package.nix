@@ -86,6 +86,7 @@ stdenv.mkDerivation (finalAttrs: {
     curl
     eigen
     fftwSinglePrec
+    gettext
     glib
     glib-networking.out
     glibmm
