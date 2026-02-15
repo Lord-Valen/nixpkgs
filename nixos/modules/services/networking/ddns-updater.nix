@@ -4,13 +4,12 @@
   pkgs,
   ...
 }:
-
 let
   cfg = config.services.ddns-updater;
 in
 {
   options.services.ddns-updater = {
-    enable = lib.mkEnableOption "Container to update DNS records periodically with WebUI for many DNS providers";
+    enable = lib.mkEnableOption "ddns-updater";
 
     package = lib.mkPackageOption pkgs "ddns-updater" { };
 
@@ -24,14 +23,12 @@ in
   config = lib.mkIf cfg.enable {
 
     systemd.services.ddns-updater = {
+      description = "DDNS-updater service";
       wantedBy = [ "multi-user.target" ];
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
       environment = cfg.environment // {
         DATADIR = "%S/ddns-updater";
-      };
-      unitConfig = {
-        Description = "DDNS-updater service";
       };
       serviceConfig = {
         TimeoutSec = "5min";
